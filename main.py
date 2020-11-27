@@ -6,7 +6,6 @@ pygame.init()
 screen_width = 1088
 screen_height = 640
 fps = 120
-pumpkin_vel = 10
 clock = pygame.time.Clock()
 cannon_x = screen_width // 2
 cannon_y = 0
@@ -24,7 +23,7 @@ class Pumpkin():
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
+        
     def draw(self, game_window):
         game_window.blit(pumpkin_img, (self.x, self.y))
 
@@ -57,8 +56,9 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-    
-    pygame.display.flip()
+
+        """ if event.MOUSEBUTTONDOWN:
+            pass """
     
     redrawWindow()
 """     test_pumpkin.updatePos()
