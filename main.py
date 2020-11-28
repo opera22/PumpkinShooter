@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 pygame.init()
 
@@ -15,11 +16,16 @@ pumpkin_power = 10
 bg = pygame.image.load("bg.png")
 bg = pygame.transform.scale(bg, (1088,640))
 pumpkin_img = pygame.image.load("pumpkin.png")
-pumpkin_img = pygame.transform.scale(pumpkin_img, (100, 100))
+pumpkin_width = 100
+pumpkin_height = 100
+pumpkin_img = pygame.transform.scale(pumpkin_img, (pumpkin_width, pumpkin_height))
 
 spider_imgs = []
-spider_imgs.append(pygame.image.load("spider1.png"))
-spider_imgs.append(pygame.image.load("spider2.png"))
+spider_width = 100
+spider_height = 75
+spider_speed = 2
+spider_imgs.append(pygame.transform.scale(pygame.image.load("spider1.png"), (spider_width, spider_height)))
+spider_imgs.append(pygame.transform.scale(pygame.image.load("spider2.png"), (spider_width, spider_height)))
 
 game_window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Pumpkin Shooter")
@@ -33,9 +39,12 @@ class Pumpkin():
         self.y = y - 50
         self.timeInAir = 0
         self.angle = getMouseAngle()
+        self.hitbox = (self.x,self.y,pumpkin_width,pumpkin_height)
         
     def draw(self, game_window):
         game_window.blit(pumpkin_img, (self.x, self.y))
+        self.hitbox = (self.x,self.y,pumpkin_width,pumpkin_height)
+        pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
 
     def getNewPos(self, x, y, power, angle, time):
         velx = power * math.cos(angle)
@@ -49,12 +58,32 @@ class Pumpkin():
         return (newx, newy)
 
 class Spider():
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.animationCount = 0
+    def __init__(self):
+        self.x = random.randint(0, screen_width)
+        self.y = screen_height - 100
+        self.animationCount = random.randint(0, 59)
+        self.animationIndex = 0
+        self.direction = random.choice([-1,1])
+        self.hitbox = (self.x,self.y,spider_width,spider_height)
     def draw(self, game_window):
-        game_window.blit(spider_imgs[animationCount], (self.x, self.y))
+        if self.direction == -1:
+            game_window.blit(spider_imgs[self.animationIndex], (self.x, self.y))
+        if self.direction == 1:
+            game_window.blit(pygame.transform.flip(spider_imgs[self.animationIndex], True, False), (self.x, self.y))
+        self.animationCount += 1
+        if self.animationCount > 30:
+            self.animationIndex = 1
+        if self.animationCount > 60:
+            self.animationIndex = 0
+            self.animationCount = 0
+        self.hitbox = (self.x,self.y,spider_width,spider_height)
+        pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
+    def updatePos(self):
+        self.x = self.x + self.direction * spider_speed
+        if self.x < 0:
+            self.direction = 1
+        if self.x > screen_width:
+            self.direction = -1
 
 def redrawWindow():
     game_window.blit(bg,(0,0))
@@ -63,10 +92,14 @@ def redrawWindow():
     mouse_pos = pygame.mouse.get_pos()
     line = [(cannon_x, cannon_y), mouse_pos]
     pygame.draw.line(game_window, (255,255,255), line[0], line[1])
+    
+    # draw spiders
+    for spider in spiders:
+        spider.draw(game_window)
     # draw pumpkins
     for pumpkin in pumpkins:
         pumpkin.draw(game_window)
-    # draw spiders
+
 
     pygame.display.update()
 
@@ -90,11 +123,20 @@ def getMouseAngle():
 
 
 def checkCollisions():
-    # check collisions with walls
 
     # check collisions between pumpkins and spiders
+    """ for pumpkin in pumpkins:
+        for spider in spiders:
+            if (pumpkin.x + pumpkin_width / 2) < (spider.x - spider_width / 2) and (pumpkin):
+                pumpkins.pop(pumpkins.index(pumpkin))
+                spiders.pop(spiders.index(spider)) """
+            #elif (pumpkin.y + pumpkin_height / 2) <
 
     return
+
+
+for i in range(0,10):
+    spiders.append(Spider())
 
 
 while True:
@@ -112,9 +154,11 @@ while True:
         pos = pumpkin.getNewPos(pumpkin.x, pumpkin.y, pumpkin_power, pumpkin.angle, pumpkin.timeInAir)
         pumpkin.x = pos[0]
         pumpkin.y = pos[1]
-        if pumpkin.x < 0 or pumpkin.x > screen_width:
+        """ if pumpkin.x < 0 or pumpkin.x > screen_width:
             pumpkins.pop(pumpkins.index(pumpkin))
         if pumpkin.y < 0 or pumpkin.y > screen_height:
-            pumpkins.pop(pumpkins.index(pumpkin))
-    
+            pumpkins.pop(pumpkins.index(pumpkin)) """
+    for spider in spiders:
+        spider.updatePos()
+
     redrawWindow()
