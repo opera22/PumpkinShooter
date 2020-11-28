@@ -125,12 +125,16 @@ def getMouseAngle():
 def checkCollisions():
 
     # check collisions between pumpkins and spiders
-    """ for pumpkin in pumpkins:
-        for spider in spiders:
-            if (pumpkin.x + pumpkin_width / 2) < (spider.x - spider_width / 2) and (pumpkin):
-                pumpkins.pop(pumpkins.index(pumpkin))
-                spiders.pop(spiders.index(spider)) """
-            #elif (pumpkin.y + pumpkin_height / 2) <
+    for p_idx, pumpkin in enumerate(pumpkins):
+        for s_idx, spider in enumerate(spiders):
+            if pumpkin.y - pumpkin_height / 2 < spider.hitbox[1] + spider.hitbox[3] and pumpkin.y + pumpkin_height / 2> spider.hitbox[1]:
+                if pumpkin.x + pumpkin_width / 2 > spider.hitbox[0] and pumpkin.x - pumpkin_width / 2 < spider.hitbox[0] + spider.hitbox[2]:
+                    spiders.pop(s_idx)
+                    #pumpkins.pop(p_idx)
+
+    for p_idx, pumpkin in enumerate(pumpkins):
+        if pumpkin.y > 5000:
+            pumpkins.pop(p_idx)
 
     return
 
@@ -154,11 +158,10 @@ while True:
         pos = pumpkin.getNewPos(pumpkin.x, pumpkin.y, pumpkin_power, pumpkin.angle, pumpkin.timeInAir)
         pumpkin.x = pos[0]
         pumpkin.y = pos[1]
-        """ if pumpkin.x < 0 or pumpkin.x > screen_width:
-            pumpkins.pop(pumpkins.index(pumpkin))
-        if pumpkin.y < 0 or pumpkin.y > screen_height:
-            pumpkins.pop(pumpkins.index(pumpkin)) """
+
     for spider in spiders:
         spider.updatePos()
+
+    checkCollisions()
 
     redrawWindow()
