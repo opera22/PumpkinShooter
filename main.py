@@ -4,6 +4,8 @@ import random
 
 pygame.init()
 
+hitboxes = False
+
 screen_width = 1088
 screen_height = 640
 fps = 120
@@ -44,7 +46,8 @@ class Pumpkin():
     def draw(self, game_window):
         game_window.blit(pumpkin_img, (self.x, self.y))
         self.hitbox = (self.x,self.y,pumpkin_width,pumpkin_height)
-        pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
+        if hitboxes == True:
+            pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
 
     def getNewPos(self, x, y, power, angle, time):
         velx = power * math.cos(angle)
@@ -77,7 +80,8 @@ class Spider():
             self.animationIndex = 0
             self.animationCount = 0
         self.hitbox = (self.x,self.y,spider_width,spider_height)
-        pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
+        if hitboxes == True:
+            pygame.draw.rect(game_window, (255,0,0), self.hitbox,2)
     def updatePos(self):
         self.x = self.x + self.direction * spider_speed
         if self.x < 0:
