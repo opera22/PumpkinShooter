@@ -6,9 +6,9 @@ Pumpkin Shooter is a simple projectile-based game where you shoot pumpkins from 
 * ` pip install pygame ` 
 
 # Execution
-Simply hit Run and it will open up a new window. Use your mouse to change the trajectory, and then click once to throw a pumpkin.
-![gameplay](gameplay2.gif)
-![gameplay with hitboxes](gameplay1.gif)
+Simply hit Run and it will open up a new window. Use your mouse to change the trajectory, and then click once to throw a pumpkin. 
+* ![gameplay](gameplay2.gif) 
+* ![gameplay with hitboxes](gameplay1.gif) 
 # Useful Websites
 * [PyGame Documentation](https://www.pygame.org/docs/)
 * [OpenGameArt/ansimuz](https://opengameart.org/users/ansimuz)
